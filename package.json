@@ -1,0 +1,12 @@
+{
+  "name": "fullstack-code",
+  "version": "1.0.0",
+  "description": "a full stack yt based website",
+  "license": "ISC",
+  "author": "Manuj Bajaj",
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  }
+}
