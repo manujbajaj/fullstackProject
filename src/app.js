@@ -1,1 +1,23 @@
-const uri = "mongodb+srv://manujbajaj16_db_user:<db_password>@cluster0.8hvx4cu.mongodb.net/?appName=Cluster0";
+import express from "express"
+import cors from "cors"
+import cookieParser from "cookie-parser"
+
+const app=express()
+
+app.use(cors({
+    origin:process.env.CORS_ORIGIN,
+    credentials:true
+}))
+
+app.use(express.json({
+    limit:"16kb"
+}))
+app.use(express.urlencoded({
+    limit:"16kb",
+    extended:true
+}))
+app.use(express.static("public"))
+app.use(cookieParser())
+
+
+export default app
