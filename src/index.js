@@ -12,19 +12,15 @@ dotenv.config({
 connectDB()
 .then(()=>{
     app.listen(process.env.PORT,()=>{
-        console.log(`the server has started on http://localhost:${process.env.PORT}`);
-        
+        console.log(`the server has started on http://localhost:${process.env.PORT}`);        
     })
     app.on("error",(error)=>{
         console.log(error);
-        
     })
 })
 .catch((err)=>{
     console.log(`db connection error ${err}`);
 })
-
-
 
 
 // (async()=>{

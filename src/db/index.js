@@ -17,3 +17,16 @@ const connectDB=async()=>{
 }
 
 export default connectDB
+
+
+// import mongoose from "mongoose";
+// import { asyncHandler } from "../utils/asyncHandler.js";
+// import { DB_NAME } from "../constants.js";
+
+// const connectDB=(async()=>{
+//     const connection=await mongoose.connect(`${process.env.MONGODB_URI}/${DB_NAME}`)
+//     console.log(`the end point url is `,connection.connections[0].host);
+    
+// })
+
+// export default connectDB
