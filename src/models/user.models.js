@@ -45,7 +45,13 @@ const userSchema=new Schema({
     },
     refreshToken:{
         type:String
-    } 
+    },
+    public_idImage:{
+        type:String
+    },
+    public_idAvatar:{
+        type:String
+    }
 },{timestamps:true})
 
 userSchema.pre("save", async function(){

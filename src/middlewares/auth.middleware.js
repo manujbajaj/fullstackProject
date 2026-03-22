@@ -21,13 +21,13 @@ const verifyJWT=asyncHandler(async(req,res,next)=>{
             throw new ApiError(500,"unauthorized request")
         }
     
-        const body=await User.findById(jwtCompare._id).select("-password -refreshToken")
+        const user=await User.findById(jwtCompare._id).select("-password -refreshToken")
         
-        if(!body){
+        if(!user){
             throw new ApiError(500,"swomething went wrong")
         }
     
-        req.body=body
+        req.user=user
     
         next()
     } catch (error) {
@@ -38,30 +38,6 @@ const verifyJWT=asyncHandler(async(req,res,next)=>{
 })
 
 export {verifyJWT}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
