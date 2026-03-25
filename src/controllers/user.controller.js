@@ -51,7 +51,6 @@ const registerUser=asyncHandler(async(req,res)=>{
         {
             $or:[{userName},{email}]
         }
-    
     )
 
     if(existedUser){
@@ -170,16 +169,22 @@ const loginUser=asyncHandler(async(req,res)=>{
 })
 
 const logoutUser=asyncHandler(async(req,res)=>{
+
+    const user=await User.findById(req.user?._id);
+
+    user.refreshToken=undefined;
+
+    await user.save({validateBeforeSave:false})
     
-    await User.findByIdAndUpdate(
-        req.user?._id,
-        {
-            $set:{refreshToken:undefined}
-        },
-        {
-            new:true
-        }        
-    )
+    // await User.findByIdAndUpdate(
+    //     req.user?._id,
+    //     {
+    //         $set:{refreshToken:undefined}
+    //     },
+    //     {
+    //         new:true
+    //     }        
+    // )
     const options={
         httpOnly:true,
         secure:true
