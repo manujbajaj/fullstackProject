@@ -291,15 +291,21 @@ const updateDetails=asyncHandler(async(req,res)=>{
     //save the user details await 
     try {
         const{updatedUsername,updatedEmail,fullName}=req.body;
-        if(!updatedUsername || !updatedEmail || fullName){
+        if(!updatedUsername || !updatedEmail || !fullName){
             throw new ApiError(400,"enter atleast one of the feilds from the three")
         }
     
         const {_id} =req.user;
         const user= await User.findById(_id)
-        user.email=updatedEmail;
-        user.userName=updatedUsername;
-        user.fullName=fullName;
+        if (updatedEmail) {
+            user.email=updatedEmail;
+        }
+        if (updatedUsername) {
+            user.userName=updatedUsername;
+        }
+        if (fullName) {
+            user.fullName=fullName;
+        }
         await user.save({validateBeforeSave:false});
         return res.status(200).json(new ApiResponse(200,user,"successfully done"))
 
@@ -389,4 +395,60 @@ const updateUserCoverImage=asyncHandler(async(req,res)=>{
     }
 })
 
-export {registerUser,loginUser,logoutUser,refreshAccessToken,changeCurrentPassword,getCurrentUser,updateDetails,updateUserAvatar,updateUserCoverImage}
+const getUserChannelProfile=asyncHandler(async(req,res)=>{
+    const {username}=req.params
+
+    if(!username?.trim()){
+        throw new ApiError(400,"username is missing")
+    }
+    // User.find({username})
+
+
+
+    //find subscribers and following
+    const channel=await User.aggregate([
+        {
+            $match:{
+                username:username?.toLowerCase()
+            }
+        },
+        {
+            $lookup:{
+                from:"subscriptions",
+                localField:"_id",
+                foreignField:"channel",
+                as:"subscribers"
+            }
+        },
+        {
+            $lookup:{
+                from:"subscriptions",
+                localField:"_id",
+                foreignField:"subscriber",
+                as:"subscribedTo"
+            }
+        },
+        {
+            $addFields:{
+                subscribersCount:{
+                    $size:"$subscribers"
+                },
+                channelsSubscribedToCount:{
+                    $size:"$subscribedTo"
+                },
+                isSubscribed:{
+                    $cond:{
+                        if:{$in:[req.user?._id,"$subscribers.subscriber"]},
+                        then:true,
+                        else:false
+                    }
+                }
+            }
+        }
+    ])
+
+
+
+})
+
+export {registerUser,loginUser,logoutUser,refreshAccessToken,changeCurrentPassword,getCurrentUser,updateDetails,updateUserAvatar,updateUserCoverImage,getUserChannelProfile}
