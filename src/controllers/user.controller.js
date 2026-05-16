@@ -60,9 +60,15 @@ const registerUser=asyncHandler(async(req,res)=>{
     
     const avatarLocalPath=await req.files?.avatar[0]?.path
     let coverImageLocalPath;
+    let public_idImage;
+    let coverImage;
     
     if(req.files&&req.files?.coverImage?.length>0){
         coverImageLocalPath=await req.files.coverImage[0].path;
+        if(coverImageLocalPath){
+            coverImage=await uploadOnCloudinary(coverImageLocalPath)
+            public_idImage=coverImage.public_id;
+        }
         
     }
     
@@ -72,10 +78,9 @@ const registerUser=asyncHandler(async(req,res)=>{
     
     
     
-    const coverImage=await uploadOnCloudinary(coverImageLocalPath)
     const avatar=await uploadOnCloudinary(avatarLocalPath)
 
-    const public_idImage=coverImage.public_id;
+    
     const public_idAvatar=avatar.public_id;
     
 
@@ -84,17 +89,18 @@ const registerUser=asyncHandler(async(req,res)=>{
     if(!avatar){
         throw new ApiError(400,"avatar image is not uploaded")
     }
+    
 
     const user=await User.create({
-        fullName,
-        avatar:avatar.url,
-        coverImage:coverImage?.url||"",
-        email,
-        password,
-        userName:userName.toLowerCase(),
-        public_idAvatar,
-        public_idImage
-    })
+            fullName,
+            avatar:avatar.url,
+            coverImage:coverImage?.url||"",
+            email,
+            password,
+            userName:userName.toLowerCase(),
+            public_idAvatar,
+            public_idImage
+        })
 
     const createdUser=await User.findById(user._id).select(
         "-password -refreshToken"

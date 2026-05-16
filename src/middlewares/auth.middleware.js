@@ -13,6 +13,8 @@ const verifyJWT=asyncHandler(async(req,res,next)=>{
     // get the user from the jwt
 
     try {
+        console.log("hello");
+        
         const token = await req.cookies?.accessToken || await req.header("Authorization")?.replace("Bearer ","");
     
         const jwtCompare= jwt.verify(token,process.env.ACCESS_TOKEN_SECRET)
